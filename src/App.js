@@ -6,8 +6,12 @@ import loading from './loading.svg';
 import './App.css';
 import Sound from 'react-sound';
 import Button from './Button';
+import { useState } from 'react'
 
 const apiToken = '<<Copiez le token de Spotify ici>>';
+const [text, setText] = useState('');
+useEffect(() => {setText('Bonjour')}, [])
+
 
 function shuffleArray(array) {
   let counter = array.length;
@@ -37,6 +41,7 @@ const App = () => {
       </header>
       <div className="App-images">
         <p>Il va falloir modifier le code pour faire un vrai Blindtest !</p>
+        <p>{text}</p>
       </div>
       <div className="App-buttons">
       </div>
