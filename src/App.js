@@ -105,3 +105,8 @@ const App = () => {
 }
 
 export default App;
+
+// TODO:
+// At launch, selects random songs many times for no reason. -- to fix
+// length error after loading. -- to fix
+// Backlog 5. -- to do
