@@ -8,7 +8,7 @@ import Sound from 'react-sound';
 import Button from './Button';
 import { useState, useEffect } from 'react'
 
-const apiToken = 'BQDQoq1FjReELUBv0d0jYTyUNTeJ_WkznLl98H9ufTm3wCdsPP6aUEaErzTQUo1lnRB89GqtDeTk041SHtm2DVD2gkyJdovR7fMHF6ukWKrwbYz773Hhine-Nu20GVSlSGJwEM-c1vC9pu1ThN2MZbOb92S2rrq4cRFOcvtS-Nkw3s_vULkVhFxEwvAPnLgS_oxyIMETFnml';
+const apiToken = 'BQDG8FQo-5gk16nun7EipBvlBszS57QK8owaL1i765Ux40dtAXXBOfmxxlND-pau722ghVhW0mX8owXkqy6YhtyKrltgpqr_uAoIn99CfFGK_wl_6JlQGB0krLEgwubD0TUn5Bn5zef6x78aigt6ChCRM9qiRRwS5lYOqdofvFPsEZVzPsm7yDZvuJYQvCcuT1sEVaEoQJTP';
 
 
 function shuffleArray(array) {
@@ -30,11 +30,21 @@ function getRandomNumber(x) {
   return Math.floor(Math.random() * x);
 }
 
+const checkAnswer = (answerid, trackid) => {
+  if (answerid === trackid) {
+    swal('Bravo', 'Vous avez trouvé la bonne réponse !', 'success');
+  }
+  else {
+    swal('Dommage', "Vous n'avez pas trouvé la bonne réponse !", 'error');
+  }
+}
+
+
 const App = () => {
   const [text, setText] = useState('');
   const [tracks, setTracks] = useState({});
   const [songsLoaded, setSongsLoaded] = useState(false);
-  // const [currentTrack, setCurrentTrack] = useState({});
+  const [currentTrack, setCurrentTrack] = useState({});
   const AlbumCover = (props) => {
     const src = props.track.album.images[0].url;
     return <img src={src} style={{ width: 400, height: 400 }} alt="album cover" />
@@ -50,18 +60,24 @@ const App = () => {
       .then(response => response.json())
       .then((data) => {
         console.log("Réponse reçue ! Voilà ce que j'ai reçu : ", data);
+        const randomIndex = getRandomNumber(data.items.length);
+        setCurrentTrack(data.items[randomIndex].track);
         setTracks(data['items']);
         setSongsLoaded(true);
+        console.log('tracks', tracks);
+        console.log('songsLoaded', songsLoaded);
+        console.log('currentTrack', currentTrack);
       })
-  }, []);
+  });
 
   if (!songsLoaded) {
     return (<img src={loading} className="App-loading" alt="loading" />)
   }
   else {
-    const track0 = tracks[0].track;
-    const track1 = tracks[1].track;
-    const track2 = tracks[2].track;
+    const track1 = tracks[getRandomNumber(tracks.length)].track;
+    const track2 = tracks[getRandomNumber(tracks.length)].track;
+    var currentTracks = [currentTrack, track1, track2];
+    currentTracks = shuffleArray(currentTracks);
     return (
       <div className="App">
         <header className="App-header">
@@ -69,16 +85,16 @@ const App = () => {
           <h1 className="App-title">Bienvenue sur le Blindtest de Médah</h1>
         </header>
         <div className="App-images">
-          <AlbumCover track={track0} />
-          <Sound url={track0.preview_url} playStatus={Sound.status.PLAYING} />
+          <AlbumCover track={currentTrack} />
+          <Sound url={currentTrack.preview_url} playStatus={Sound.status.PLAYING} />
           <p>Il va falloir modifier le code pour faire un vrai Blindtest !</p>
           <p>{text}</p>
           <p>{tracks.length} musiques chargées</p>
           {/* Display a button for each track containing track name */}
-          <Button>{track0.name}</Button>
-          <Button>{track1.name}</Button>
-          <Button>{track2.name}</Button>
-          <p>Premier morceau : {track0.name} de {track0.artists[0].name}</p>
+          <Button onClick={() => checkAnswer(currentTracks[0].id, currentTrack.id)}>{currentTracks[0].name}</Button>
+          <Button onClick={() => checkAnswer(currentTracks[1].id, currentTrack.id)}>{currentTracks[1].name}</Button>
+          <Button onClick={() => checkAnswer(currentTracks[2].id, currentTrack.id)}>{currentTracks[2].name}</Button>
+          <p>Premier morceau : {currentTrack.name} de {currentTrack.artists[0].name}</p>
 
         </div>
         <div className="App-buttons">
