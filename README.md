@@ -1,5 +1,9 @@
 # blindtest-spotify
 
+Dojo organisé par Theodo x Eclair le 16/03/2022.
+
+--
+
 This is a simple demo of how to create a blindtest using Spotify and React.
 
 ## Getting started
